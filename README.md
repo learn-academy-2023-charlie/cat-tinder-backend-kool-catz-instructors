@@ -1,24 +1,44 @@
-# README
+As a developer, I can add a resource for Cat that has a name, an age, what the cat enjoys doing, and an image.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+rails g resource Cat name:string age:integer hobby:text image:text
 
-Things you may want to cover:
+Remember to migrate to update the schema
 
-* Ruby version
+As a developer, I can add cat seeds to the `seeds.rb` file.
 
-* System dependencies
+cats = [
+  {
+    name:'Garfield', 
+    age:6, 
+    hobby:'eating lasagna', 
+    image:'https://freesvg.org/img/OnlyWine-186.png'
+  },
+  {
+    name:'Slyvester', 
+    age:10, 
+    hobby:'chasing Tweety Bird', 
+    image:'https://freesvg.org/img/OnlyWine-186.png'
+  },
+  {
+    name:'Simba', 
+    age:3, 
+    hobby:'king of the jungle', 
+    image:'https://freesvg.org/img/OnlyWine-186.png'
+  }
+]
 
-* Configuration
+cats.each do |attributes|
+  Cat.create attributes
+  p "created cat #{attributes}" 
+end
 
-* Database creation
+As a developer, I can run the rails command to add cats to database.
 
-* Database initialization
+$ rails db:seed
 
-* How to run the test suite
+rails routes
+- http://localhost:3000/rails/info/routes
+- $ rails routes -E
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+rails db:setup
+- allows database to be created, migrated, and seeded
