@@ -67,3 +67,38 @@ Remember to migrate to update the schema
 ## As a developer, I can run the rails command to add cats to database.
 - $ `rails db:seed`
 
+-----
+## branch: api-endpoints
+## As a developer, I can add an index request spec to my application.
+```rb
+  require 'rails_helper'
+
+  RSpec.describe "Cats", type: :request do
+    describe "GET /index" do
+      it 'gets a list of cats' do
+        Cat.create(
+          name:'Garfield', 
+          age:6, 
+          hobby:'eating lasagna', 
+          image:'https://freesvg.org/img/OnlyWine-186.png'
+        )
+        get '/cats'
+        cat = JSON.parse(response.body)
+
+        expect(response).to have_http_status(200)
+        expect(cat.length).to eq 1
+      end
+    end
+  end
+```
+
+## As a developer, I can add an index endpoint to my application.
+```rb
+  class CatsController < ApplicationController
+
+    def index
+      cats = Cat.all
+      render json: cats
+    end
+  end
+```
