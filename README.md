@@ -155,3 +155,48 @@ Remember to migrate to update the schema
     end
   end
 ```
+***
+## API Validations
+- ensures the data is clean: it contains all the required attributes
+- test the app/models through spec/models
+- test the app/controllers through spec/requests
+
+- Think about what you want to do
+- Think about how you will test it
+
+- TDD
+  - Write the test
+  - See it fail
+  - Write the code
+  - See it pass
+
+```bash
+  Cats
+  GET /index
+    gets a list of cats
+  POST /create
+    creates a cat
+"create response"
+422
+    will not create a cat that is missing a name
+"create response"
+422
+"json hash"
+{"age"=>["can't be blank"]}
+    will not create a cat that is missing an age (FAILED - 1)
+
+Failures:
+
+  1) Cats POST /create will not create a cat that is missing an age
+     Failure/Error: expect(cat_json['name']).to include "can't be blank"
+       expected nil to include "can't be blank", but it does not respond to `include?`
+     # ./spec/requests/cats_spec.rb:79:in `block (3 levels) in <top (required)>'
+
+Finished in 0.0771 seconds (files took 1.08 seconds to load)
+4 examples, 1 failure
+
+Failed examples:
+
+rspec ./spec/requests/cats_spec.rb:60 # Cats POST /create will not create a cat that is missing an age
+
+```
