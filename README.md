@@ -16,7 +16,8 @@
     - $  `rails db:seed`
 
 - review
- 
+ [2023 Charlie How The Internet Works.pdf](https://github.com/learn-academy-2023-charlie/cat-tinder-backend-kool-catz-instructors/files/11661538/2023.Charlie.How.The.Internet.Works.pdf)
+
 ***
 ## switching drivers
 ***NOTE: Perform after all steps for main branch are completed by first driver***
