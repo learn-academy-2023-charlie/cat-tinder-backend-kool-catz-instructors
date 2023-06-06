@@ -1,3 +1,5 @@
+# Cat Tinder Project (Backend) - 6/5/23 Charlie
+
 ## rails commands and informational sites
 - rails routes
   - http://localhost:3000/rails/info/routes
@@ -13,6 +15,16 @@
     - $  `rails db:migrate`
     - $  `rails db:seed`
 
+- review
+ 
+***
+## switching drivers
+***NOTE: Perform after all steps for main branch are completed by first driver***
+- join the team on the cat tinder project link
+- clone the repo
+- load all dependencies: $ `bundle`
+- $ `rails db:setup`
+***
 ## branch: main
 - Create empty repo from the Cat Tinder Project link
 - Create an API
@@ -28,14 +40,17 @@
   - $  `git commit -m "initial commit"`
   - $  `git push origin main`
 - Create a request to add branch protection on slack thread
-
+***
 ## branch: backend-structure
-## As a developer, I can add a resource for Cat that has a name, an age, what the cat enjoys doing, and an image.
+### As a developer, I can create a RSpec testing suite in my Rails application.
+- performed by installing rspec-rails gem and generating rspec
+
+### As a developer, I can add a resource for Cat that has a name, an age, what the cat enjoys doing, and an image.
 - $ `rails g resource Cat name:string age:integer hobby:text image:text`  
 Remember to migrate to update the schema
 - $ `rails db:migrate`
 
-## As a developer, I can add cat seeds to the `seeds.rb` file.
+### As a developer, I can add cat seeds to the `seeds.rb` file.
 ```rb
   cats = [
     {
@@ -64,9 +79,46 @@ Remember to migrate to update the schema
   end
 ```
 
-## As a developer, I can run the rails command to add cats to database.
+### As a developer, I can run the rails command to add cats to database.
 - $ `rails db:seed`
 
+### As a developer, I can enable my controller to accept requests from outside applications.
+```ruby
+  # disable the authenticity token in app/controllers/application_controller.rb
+  class ApplicationController < ActionController::Base
+    skip_before_action :verify_authenticity_token
+  end
+```
+
+### As a developer, I can add the CORS gem to my Rails application.
+- Two options 
+  1. modify Gemfile by adding `gem 'rack-cors', :require => 'rack/cors'`
+  2. add rack-cors gem through the terminal: 
+    - $ `bundle add rack-cors`
+    - Check that `gem "rack-cors"` was installed at the end of the Gemfile
+
+### As a developer, I can add the `cors.rb` file to my application.
+- Create file called `cors.rb` in config/initializers
+- Add the following lines of code to the file
+```rb
+  # Avoid CORS issues when API is called from the frontend app.
+  # Handle Cross-Origin Resource Sharing (CORS) in order to accept cross-origin AJAX requests.
+
+  # Read more: https://github.com/cyu/rack-cors
+
+  Rails.application.config.middleware.insert_before 0, Rack::Cors do
+    allow do
+      origins '*'  # <- change this to allow requests from any domain while in development.
+
+      resource '*',
+        headers: :any,
+        methods: [:get, :post, :put, :patch, :delete, :options, :head]
+    end
+  end
+```
+- Update the dependencies: $ `bundle`
+- Create a pull request review
+***
 -----
 ## branch: api-endpoints
 ## As a developer, I can add an index request spec to my application.
