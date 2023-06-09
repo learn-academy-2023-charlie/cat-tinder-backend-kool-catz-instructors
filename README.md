@@ -170,33 +170,101 @@ Remember to migrate to update the schema
   - Write the code
   - See it pass
 
+## As a developer, I can add the appropriate model specs that will ensure an incomplete cat throws an error.
+- Write the test in spec/models/cat_spec.rb
+```rb
+  it 'should not be valid without a name' do
+    cat = Cat.create(
+      name:nil,
+      age:3, 
+      hobby:'king of the jungle', 
+      image:'https://freesvg.org/img/OnlyWine-186.png'
+    )
+    expect(cat.errors[:name]).to_not be_empty
+  end
+```  
+- See it fail: $ `rspec spec/models/cat_spec.rb`
+
+## As a developer, I can add the appropriate model validations to ensure the user submits a name, an age, what the cat enjoys, and an image.
+- Write the code in app/models/cat.rb
+```rb
+  validates :name, presence: true
+```
+- See it pass: $ `rspec spec/models/cat_spec.rb`
+
+## As a developer, I can add the appropriate model specs that will ensure a cat enjoys entry is at least 10 characters long.
+- Write the test in spec/models/cat_spec.rb
+```rb
+  it 'should not be valid with a hobby that has less than 10 characters' do
+    cat = Cat.create(
+      name:'Simba',
+      age:3, 
+      hobby:'knits', 
+      image:'https://freesvg.org/img/OnlyWine-186.png'
+    )
+    expect(cat.errors[:hobby]).to_not be_empty
+  end
+```  
+- See it fail: $ `rspec spec/models/cat_spec.rb`
+
+## As a developer, I can add a validation to assure that will ensure a cat enjoys entry is at least 10 characters long.
+- Write the code in app/models/cat.rb
+```rb
+  validates :name, :hobby, presence: true
+  validates :hobby, length: {minimum: 10}
+```
+- See it pass: $ `rspec spec/models/cat_spec.rb`
+
+## As a developer, I can add the appropriate request validations to ensure the API is sending useful information to the frontend developer if a new cat is not valid.
+- Write the test in spec/requests/cats_spec.rb
+```rb
+  it 'will not create a cat that is missing a name' do
+    # attributes
+    cat_params = {
+      cat: {
+        name:nil, 
+        age:6, 
+        hobby:'eating lasagna', 
+        image:'https://freesvg.org/img/OnlyWine-186.png'
+      }
+    }
+    # request
+    post '/cats', params: cat_params
+    # assertion on the response
+    # status
+    p 'create response', response.status
+    expect(response.status).to eq(422)
+    # payload
+    cat_json = JSON.parse(response.body)
+    p 'json hash', cat_json
+    expect(cat_json['name']).to include "can't be blank"
+  end
+```  
+- See it fail: $ `rspec spec/requests/cats_spec.rb`
+***NOTE: using developer tool `p` to print data obtain from the status code from the response and error message from the json***
 ```bash
   Cats
-  GET /index
-    gets a list of cats
-  POST /create
-    creates a cat
-"create response"
-422
-    will not create a cat that is missing a name
-"create response"
-422
-"json hash"
-{"age"=>["can't be blank"]}
-    will not create a cat that is missing an age (FAILED - 1)
-
-Failures:
-
-  1) Cats POST /create will not create a cat that is missing an age
-     Failure/Error: expect(cat_json['name']).to include "can't be blank"
-       expected nil to include "can't be blank", but it does not respond to `include?`
-     # ./spec/requests/cats_spec.rb:79:in `block (3 levels) in <top (required)>'
-
-Finished in 0.0771 seconds (files took 1.08 seconds to load)
-4 examples, 1 failure
-
-Failed examples:
-
-rspec ./spec/requests/cats_spec.rb:60 # Cats POST /create will not create a cat that is missing an age
-
+    GET /index
+      gets a list of cats
+    POST /create
+      creates a cat
+  "create response"
+  422
+  "json hash"
+  {"name"=>["can't be blank"]}
+      will not create a cat that is missing a name (FAILED - 1)
 ```
+
+## As a developer, I can add the appropriate request spec that will look for a 422 error if the create validations are not met.
+- Write the code in app/controllers/cats_controller.rb
+```rb
+  def create
+    cat = Cat.create(cat_params)
+    if cat.valid?
+      render json: cat
+    else
+      render json: cat.errors, status: 422
+    end
+  end
+```
+- See it pass: $ `rspec spec/requests/cats_spec.rb`
